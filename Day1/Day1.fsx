@@ -6,21 +6,15 @@ let inputLines = File.ReadAllLines(inputPath)
 
 ///let inputLines = [|"3   4"; "4   3";"2   5";"1   3";"3   9";"3   3"|]
 
-let leftLocationIDs = Array.zeroCreate<int>inputLines.Length
-let rightLocationIDs = Array.zeroCreate<int>inputLines.Length
-
 type locationCombi = {Left:int; Right:int }
 let lineParse (line:string) = 
     let stringIDs = line.Split("   ")
-    {Left = (int)stringIDs[0]; Right = (int)stringIDs[1]}
+    ((int)stringIDs[0], (int)stringIDs[1])
 
-inputLines
-|> Array.map lineParse
-|> Array.iteri (
-    fun  index locationCombi -> 
-        leftLocationIDs[index] <- locationCombi.Left
-        rightLocationIDs[index] <- locationCombi.Right
-    )
+let (leftLocationIDs,rightLocationIDs) =
+    inputLines
+    |> Array.map lineParse
+    |> Array.unzip
 
 let leftLocationIDsSorted = Array.sort leftLocationIDs
 let rightLocationIDsSorted =  Array.sort rightLocationIDs

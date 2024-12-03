@@ -6,7 +6,6 @@ let inputLines = File.ReadAllLines(inputPath)
 
 ///let inputLines = [|"3   4"; "4   3";"2   5";"1   3";"3   9";"3   3"|]
 
-type locationCombi = {Left:int; Right:int }
 let lineParse (line:string) = 
     let stringIDs = line.Split("   ")
     ((int)stringIDs[0], (int)stringIDs[1])

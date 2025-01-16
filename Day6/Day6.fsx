@@ -3,7 +3,7 @@ open System.IO
 
 let inputPath = Path.Combine(__SOURCE_DIRECTORY__, "Input.txt")
 let inputPathTest = Path.Combine(__SOURCE_DIRECTORY__, "InputTest.txt")
-let inputFile = File.ReadAllLines(inputPath)
+let inputFile = File.ReadAllLines(inputPathTest)
 let input = inputFile
 
 type Direction = 
@@ -51,11 +51,11 @@ let getNextDirection direction =
     | Direction.Down -> Direction.Left
     | Direction.Left -> Direction.Up
 
-let guardIsOutsideMap (map: Position array2d) ((position, _):(Coordinate * Direction)) = 
-    position.Row < 0 || 
-    position.Row >= Array2D.length1(map) - 1 ||
-    position.Col < 0 ||
-    position.Col >= Array2D.length2(map) - 1
+let coordinateIsOutsideMap (map: Position array2d) (coordinate:Coordinate) = 
+    coordinate.Row < 0 || 
+    coordinate.Row >= Array2D.length1(map) - 1 ||
+    coordinate.Col < 0 ||
+    coordinate.Col >= Array2D.length2(map) - 1
 
 let positionIsObstructed (map: Position array2d) (position : Coordinate) =
     match map[position.Row, position.Col] with
@@ -70,11 +70,11 @@ let walkTheGuard (map: Position array2d) (startPosition:(Coordinate * Direction)
     let mutable currentPosition = startPosition
     while guardIsOnMap do
         let (coordinate, direction) = currentPosition
+        addPositionToPath map coordinate
         let nextCoordinate = tryGetNextCoordinate (coordinate, direction)
-        if guardIsOutsideMap map currentPosition then
+        if coordinateIsOutsideMap map nextCoordinate then
             guardIsOnMap <- false
         else if not (positionIsObstructed map nextCoordinate) then
-            addPositionToPath map nextCoordinate
             currentPosition <- (nextCoordinate, direction)
         else
             let nextDirection = getNextDirection direction
